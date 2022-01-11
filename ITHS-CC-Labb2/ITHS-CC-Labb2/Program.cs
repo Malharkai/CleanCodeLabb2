@@ -9,7 +9,7 @@ Order slowOrder = new Order
 {
     ID = Guid.NewGuid(),
     Email = "slowEmail@example.com",
-    Priority = OrderStatus.LightningSpeed,
+    Processor = new ProcessOrderInLightningSpeed(),
     TotalPrce = 100,
 };
 orderHandler.HandleOrder(slowOrder);
