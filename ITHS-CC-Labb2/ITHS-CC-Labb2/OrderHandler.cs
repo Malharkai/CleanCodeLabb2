@@ -17,35 +17,20 @@ namespace ITHS_CC_Labb2
         }
         public void HandleOrder(Order order)
         {
-            bool s = false;
-            
+            bool isSuccesful = false;
+
             _logger.Log("Attempting to process order with ID " + order.ID);
-            if (order.Priority == OrderStatus.Normal)
+            isSuccesful = order.Processor.Process(order);
+            _emailHandler.Email(order.Email, order.ID);
+
+
+            if (!isSuccesful)
             {
-                s = ProcessOrderNormally.Process(order);
-                _logger.Log("Succesfully processed order with ID " + order.ID);
-                _emailHandler.Email(order.Email, order.ID);
-            }
-            else if (order.Priority == OrderStatus.Quick)
-            {
-                s = ProcessOrderQuickly.Process(order);
-                _logger.Log("Succesfully processed order with ID " + order.ID);
-                _emailHandler.Email(order.Email, order.ID);
-            }
-            else if (order.Priority == OrderStatus.LightningSpeed)
-            {
-                s = ProcessOrderInLightningSpeed.Process(order);
-                _logger.Log("Succesfully processed order with ID " + order.ID);
-                _emailHandler.Email(order.Email, order.ID);
+                _logger.Log("FAILED ORDER: Could not ship order with ID " + order.ID);
             }
             else
             {
-                s = false;
-            }
-
-            if (!s)
-            {
-                _logger.Log("FAILED ORDER: Could not ship order with ID " + order.ID);
+                _logger.Log("Succesfully processed order with ID " + order.ID);
             }
         }
     }
